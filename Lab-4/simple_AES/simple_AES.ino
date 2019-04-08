@@ -42,7 +42,7 @@ void unpadding(char* padded, int blockCount)
   } 
 }
 
-int aes256_enc(char* plaintext, unsigned int len, uint8_t* key, char* &outCipherText)
+int aes128_enc(char* plaintext, unsigned int len, uint8_t* key, char* &outCipherText)
 {
   int blockCount = 0;
 
@@ -50,20 +50,20 @@ int aes256_enc(char* plaintext, unsigned int len, uint8_t* key, char* &outCipher
 
   for (int i = 0 ; i < blockCount; ++i)
   {
-    aes256_enc_single(key, padded + 16 * i);
+    aes128_enc_single(key, padded + 16 * i);
   }
   outCipherText = padded;
   return 16 * blockCount;
 }
 
-int aes256_dec(char* ciphertext, unsigned int len, uint8_t* key, char* &outPlainText)
+int aes128_dec(char* ciphertext, unsigned int len, uint8_t* key, char* &outPlainText)
 {
   int blockCount = 0;
   char * padded = padding(ciphertext, len, &blockCount);
 
   for (int i = 0 ; i < blockCount; ++i)
   {
-    aes256_dec_single(key, padded + 16 * i);
+    aes128_dec_single(key, padded + 16 * i);
   }
 
   unpadding(padded, blockCount);
@@ -85,9 +85,9 @@ void loop() {
   char* decrypted = NULL;
   debug("plaintext", plaintext);
   debug("length of plaintext", length_plaintext);
-  int len_ciphertext = aes256_enc(plaintext, length_plaintext, key, encrypted);
+  int len_ciphertext = aes128_enc(plaintext, length_plaintext, key, encrypted);
   debug("encrypted", encrypted);
-  aes256_dec(encrypted, len_ciphertext, key, decrypted);
+  aes128_dec(encrypted, len_ciphertext, key, decrypted);
   debug("decrypted", decrypted);
   free(encrypted);
   free(decrypted);
